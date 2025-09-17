@@ -1,0 +1,3 @@
+Distributed systems enable parallel processing of large datasets.
+MapReduce splits input data into chunks and aggregates results.
+

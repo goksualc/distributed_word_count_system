@@ -1,3 +1,5 @@
+# distributed_word_count_system
+
 Distributed Word Count System (Processes, Threads, RPC)
 
 ### Quick Start
@@ -224,4 +226,4 @@ How to Evaluate (Suggested)
   - Process+Threads may outperform when I/O bound; limited by GIL for CPU-only
   - RPC scales across hosts but adds serialization/network overhead; best for multi-node
 
-# distributed_word_count_system
+

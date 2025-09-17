@@ -1,5 +1,45 @@
 Distributed Word Count System (Processes, Threads, RPC)
 
+### Quick Start
+
+Clone the repository:
+
+```
+git clone https://github.com/your-org/distributed_word_count_system.git
+cd distributed_word_count_system
+```
+
+Create and activate a virtual environment, then install requirements:
+
+```
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+Run examples for each strategy:
+
+- Process-only:
+```
+bash scripts/run_process_only.sh
+```
+
+- Process + Threads:
+```
+bash scripts/run_process_threads.sh
+```
+
+- RPC (start workers in separate terminals):
+```
+python src/rpc_worker.py --port 9001
+python src/rpc_worker.py --port 9002
+python src/rpc_worker.py --port 9003
+```
+Then run the master:
+```
+bash scripts/run_rpc.sh
+```
+
 Overview
 
 This project compares three implementation strategies for a small distributed system inspired by MapReduce. The chosen computational problem is: count word frequencies across multiple text files using three or more worker nodes. We implement and evaluate three variants:
@@ -106,6 +146,62 @@ Then run master in another terminal:
 ```
 bash scripts/run_rpc.sh
 ```
+
+### Running the Experiments
+
+You can run each strategy via the provided scripts:
+
+```
+bash scripts/run_process_only.sh
+bash scripts/run_process_threads.sh
+bash scripts/run_rpc.sh
+```
+
+All strategies should produce the same word-frequency output for the same input data.
+
+### Benchmarking
+
+Run benchmarks across dataset sizes and strategies. Example:
+
+```
+python scripts/benchmark.py --sizes small medium large --strategies process threads rpc
+```
+
+Results are saved as CSV under `experiments/results/` and plots under `experiments/charts/`.
+
+### Example Output
+
+Sample output from `run_rpc.sh` (format: `{word → count}` shown as tab-separated rows):
+
+```
+hello	2
+a	1
+again	1
+data	1
+datasets	1
+distributed	1
+```
+
+### Evaluation
+
+- Process-only:
+  - **Pros**: Simple model; good CPU utilization on a single host; predictable behavior
+  - **Cons**: Inter-process communication and serialization overhead; limited to one machine
+- Process + Threads:
+  - **Pros**: Can hide I/O latency; fewer processes; good for mixed I/O + CPU workloads
+  - **Cons**: Python GIL limits CPU-bound speedups within a process; requires careful synchronization
+- RPC:
+  - **Pros**: True distribution across multiple machines; horizontal scalability
+  - **Cons**: More complex (networking, retries, health checks); network/serialization overhead
+
+Note: The RPC approach scales across multiple machines (or containers) by running workers on different hosts/ports.
+
+### References & Resources Used
+
+- ChatGPT
+- Python documentation: `multiprocessing`, `threading`, `xmlrpc`
+- Dean, J., & Ghemawat, S. (2004). MapReduce: Simplified Data Processing on Large Clusters
+- Various blogs and GitHub repositories on distributed systems and MapReduce patterns
 
 Evaluation Notes
 
